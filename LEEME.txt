@@ -1,0 +1,22 @@
+CHECKLIST DIARIO MAF - VERSIÓN POR SECCIONES
+
+Secciones incluidas:
+- Proyectos
+- Compras
+- Tareas del personal del taller
+- Actividades diarias
+- Dirección
+- Comercial y cotizaciones
+- Ingeniería y diseño
+- Administración
+- Reuniones
+- Otros
+
+Uso:
+1. Abre index.html.
+2. Selecciona la sección correspondiente.
+3. Escribe el pendiente y presiona Agregar.
+4. Marca las tareas terminadas.
+5. El historial y el progreso se guardan automáticamente en el navegador.
+
+Para compartir la misma información entre varios dispositivos se requiere una base de datos en línea.
