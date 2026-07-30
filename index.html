@@ -1,10 +1,91 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d1b3e"><title>Checklist Diario MAF</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
-:root{--n:#0d1b3e;--b:#1789c7;--g:#269b67;--r:#cf4e4e;--m:#6f7a90;--l:#dfe5ee}*{box-sizing:border-box}body{margin:0;font-family:system-ui,Segoe UI,Arial;background:linear-gradient(#eaf1f8,#f7f8fb 260px);color:#172033;min-height:100vh}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}.app{width:min(950px,100%);margin:auto;padding:14px 12px 70px}.top{background:var(--n);color:#fff;border-radius:22px;padding:20px;box-shadow:0 12px 28px #0d1b3e1a}.topline{display:flex;justify-content:space-between;gap:15px;align-items:center}h1{margin:0;font-size:1.45rem}.sub{margin:4px 0 0;opacity:.75;font-size:.9rem}.datebar{display:grid;grid-template-columns:auto 1fr auto;gap:8px;margin-top:17px}.datebar input,.datebar button{border:0;border-radius:12px;padding:12px}.datebar input{width:100%;font-weight:800;color:var(--n)}.datebar button{background:#fff;color:var(--n);font-weight:900}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.tab{border:0;border-radius:12px;padding:12px;background:#e6eaf1;color:var(--m);font-weight:900}.tab.active{background:var(--n);color:#fff}.card,.section{background:#fff;border:1px solid var(--l);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 5px 16px #0d1b3e0e}.prow,.shead{display:flex;justify-content:space-between;align-items:center;gap:10px}.prow h2{margin:0;font-size:1rem}.prow p{margin:4px 0 0;color:var(--m);font-size:.87rem}.pct{font-size:1.8rem;font-weight:950;color:var(--n)}.track{height:12px;background:#e8edf4;border-radius:99px;overflow:hidden;margin-top:12px}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--b),var(--g));transition:.2s}input,select{width:100%;border:1px solid var(--l);border-radius:12px;padding:12px;background:#fff;outline:none}.grid3{display:grid;grid-template-columns:210px 1fr auto;gap:8px}.grid2{display:grid;grid-template-columns:1fr auto;gap:8px}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:850}.primary{background:var(--b);color:#fff}.soft{background:#edf1f6;color:var(--n)}.red{background:#fdecec;color:var(--r)}.stitle{font-weight:950;color:var(--n)}.count{font-size:.8rem;color:var(--m)}.tools{display:flex;gap:5px}.icon{border:0;border-radius:9px;padding:7px 9px;background:#edf1f6;color:var(--n);font-weight:900}.tasks{display:flex;flex-direction:column;gap:8px;margin-top:10px}.task{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;border:1px solid var(--l);border-radius:14px;padding:11px}.task.done{background:#f2faf6}.check{appearance:none;width:23px;height:23px;border:2px solid #b8c2d0;border-radius:7px;margin:0;display:grid;place-content:center}.check:checked{background:var(--g);border-color:var(--g)}.check:checked:after{content:"✓";color:#fff;font-size:15px;font-weight:950}.tasktext{border:0;padding:0;background:transparent;font-weight:700}.task.done .tasktext{text-decoration:line-through;color:#7b8696}.empty,.status{color:var(--m);font-size:.84rem;padding:8px 2px}.status{text-align:center}.status.err{color:var(--r)}.status.ok{color:var(--g)}.footer{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}.loginwrap{min-height:100vh;display:grid;place-items:center;padding:18px}.login{width:min(430px,100%);background:#fff;border:1px solid var(--l);border-radius:22px;padding:24px;box-shadow:0 12px 28px #0d1b3e1a}.login p{color:var(--m);line-height:1.45}.loginform{display:grid;gap:10px;margin-top:18px}.historyday{border:1px solid var(--l);border-radius:15px;padding:14px;margin-bottom:10px}.hgroup{margin-top:10px}.hgroup ul{margin:5px 0 0;padding-left:20px}@media(max-width:650px){.grid3,.grid2{grid-template-columns:1fr}.btn{width:100%}.task{grid-template-columns:auto 1fr}.task .tools{grid-column:2;justify-content:flex-end}.top,.card,.section{border-radius:16px}}
-</style></head><body>
-<section id="loginView" class="loginwrap"><div class="login"><h1>Checklist Diario MAF</h1><p>Inicia sesión para compartir los mismos pendientes entre computadora y celular.</p><form id="loginForm" class="loginform"><input id="email" type="email" placeholder="Correo" required><input id="password" type="password" placeholder="Contraseña" required><button class="btn primary">Iniciar sesión</button></form><div id="loginStatus" class="status"></div></div></section>
-<main id="appView" class="app hidden"><header class="top"><div class="topline"><div><h1>Checklist Diario MAF</h1><p class="sub">Pendientes compartidos</p></div><button id="logoutBtn" class="btn soft">Cerrar sesión</button></div><div class="datebar"><button id="prev">←</button><input id="date" type="date"><button id="next">→</button></div></header><nav class="tabs"><button class="tab active" data-v="today">HOY</button><button class="tab" data-v="history">HISTORIAL</button></nav>
-<section id="today"><div class="card"><div class="prow"><div><h2>Progreso del día</h2><p id="ptext">0 de 0 tareas completadas</p></div><div id="pct" class="pct">0%</div></div><div class="track"><div id="fill" class="fill"></div></div></div><div class="card"><form id="taskForm" class="grid3"><select id="sectionSelect"></select><input id="taskInput" maxlength="160" placeholder="Escribe un pendiente..." required><button class="btn primary">+ Agregar</button></form><form id="sectionForm" class="grid2" style="margin-top:10px"><input id="sectionInput" maxlength="60" placeholder="Crear nueva sección..."><button class="btn soft">+ Sección</button></form></div><div id="sections"></div><div class="footer"><button id="carry" class="btn soft">Pasar pendientes de ayer</button><button id="refresh" class="btn soft">Actualizar</button></div><div id="status" class="status"></div></section>
-<section id="history" class="hidden"><div class="card"><div class="prow"><div><h2>Historial</h2><p>Últimos 30 días</p></div></div><div id="historyList" style="margin-top:14px"></div></div></section></main>
-<script>
-(()=>{"use strict";const URL="https://cztusoesfvagakyeldhc.supabase.co",KEY="sb_publishable_vqyqYyUf5KRCkbsyiFhs6g_UyEKgabR",sb=supabase.createClient(URL,KEY),$=id=>document.getElementById(id);let user=null,sections=[],tasks=[];const iso=(d=new Date())=>new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));function status(m,t=""){$("status").textContent=m;$('status').className='status '+t}function show(auth){$('loginView').classList.toggle('hidden',auth);$('appView').classList.toggle('hidden',!auth)}$('loginForm').onsubmit=async e=>{e.preventDefault();$('loginStatus').textContent='Entrando...';const{error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});$('loginStatus').textContent=error?'Error: '+error.message:''};$('logoutBtn').onclick=()=>sb.auth.signOut();sb.auth.onAuthStateChange(async(_,s)=>{user=s?.user||null;show(!!user);if(user){$('date').value||=iso();await loadSections();await loadTasks()}});async function loadSections(){const{data,error}=await sb.from('sections').select('id,name,position').order('position').order('id');if(error)return status('Error en secciones: '+error.message,'err');sections=data||[];$('sectionSelect').innerHTML=sections.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}async function loadTasks(){status('Actualizando...');const{data,error}=await sb.from('tasks').select('*').eq('task_date',$('date').value).order('created_at');if(error)return status('Error en tareas: '+error.message,'err');tasks=data||[];render();status('Sincronizado '+new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}),'ok')}function render(){const box=$('sections');box.innerHTML='';sections.forEach(s=>{const list=tasks.filter(t=>String(t.section_id)===String(s.id)),done=list.filter(t=>t.completed).length,el=document.createElement('section');el.className='section';el.innerHTML=`<div class="shead"><div><span class="stitle">${esc(s.name)}</span> <span class="count">${done} de ${list.length}</span></div><div class="tools"><button class="icon rename">✎</button><button class="icon red delsec">×</button></div></div><div class="tasks"></div><div class="empty ${list.length?'hidden':''}">Sin pendientes.</div>`;el.querySelector('.rename').onclick=()=>renameSection(s);el.querySelector('.delsec').onclick=()=>deleteSection(s);const wrap=el.querySelector('.tasks');list.forEach(t=>{const r=document.createElement('div');r.className='task'+(t.completed?' done':'');r.innerHTML=`<input class="check" type="checkbox" ${t.completed?'checked':''}><input class="tasktext" value="${esc(t.text)}"><div class="tools"><button class="icon move">↔</button><button class="icon red remove">×</button></div>`;r.querySelector('.check').onchange=e=>updateTask(t.id,{completed:e.target.checked,completed_at:e.target.checked?new Date().toISOString():null,updated_at:new Date().toISOString()});r.querySelector('.tasktext').onchange=e=>e.target.value.trim()?updateTask(t.id,{text:e.target.value.trim(),updated_at:new Date().toISOString()}):loadTasks();r.querySelector('.move').onclick=()=>moveTask(t);r.querySelector('.remove').onclick=()=>deleteTask(t.id);wrap.appendChild(r)});box.appendChild(el)});const n=tasks.length,d=tasks.filter(t=>t.completed).length,p=n?Math.round(d/n*100):0;$('ptext').textContent=`${d} de ${n} tareas completadas`;$('pct').textContent=p+'%';$('fill').style.width=p+'%'}$('taskForm').onsubmit=async e=>{e.preventDefault();const text=$('taskInput').value.trim(),section_id=Number($('sectionSelect').value);if(!text||!section_id)return;const{error}=await sb.from('tasks').insert({section_id,text,task_date:$('date').value,completed:false,created_by:user.id});if(error)return status('No se pudo agregar: '+error.message,'err');$('taskInput').value='';await loadTasks()};$('sectionForm').onsubmit=async e=>{e.preventDefault();const name=$('sectionInput').value.trim();if(!name)return;const position=sections.length?Math.max(...sections.map(s=>s.position||0))+1:1,{error}=await sb.from('sections').insert({name,position});if(error)return status('No se pudo crear: '+error.message,'err');$('sectionInput').value='';await loadSections();render()};async function updateTask(id,changes){const{error}=await sb.from('tasks').update(changes).eq('id',id);if(error)return status(error.message,'err');loadTasks()}async function deleteTask(id){if(!confirm('¿Eliminar pendiente?'))return;const{error}=await sb.from('tasks').delete().eq('id',id);if(error)return status(error.message,'err');loadTasks()}async function moveTask(t){const m=sections.map((s,i)=>`${i+1}. ${s.name}`).join('\n'),a=prompt('Mover a qué sección?\n\n'+m+'\n\nEscribe el número:');if(a===null)return;const s=sections[Number(a)-1];if(!s)return alert('Número inválido');updateTask(t.id,{section_id:s.id,updated_at:new Date().toISOString()})}async function renameSection(s){const n=prompt('Nuevo nombre:',s.name);if(!n||n.trim()===s.name)return;const{error}=await sb.from('sections').update({name:n.trim()}).eq('id',s.id);if(error)return status(error.message,'err');await loadSections();render()}async function deleteSection(s){if(!confirm(`¿Eliminar sección "${s.name}"?`))return;const{error}=await sb.from('sections').delete().eq('id',s.id);if(error)return status(error.message,'err');await loadSections();await loadTasks()}$('carry').onclick=async()=>{const d=new Date($('date').value+'T12:00:00');d.setDate(d.getDate()-1);const{data,error}=await sb.from('tasks').select('section_id,text').eq('task_date',iso(d)).eq('completed',false);if(error)return status(error.message,'err');const ex=new Set(tasks.map(t=>`${t.section_id}|${t.text.toLowerCase()}`)),rows=(data||[]).filter(t=>!ex.has(`${t.section_id}|${t.text.toLowerCase()}`)).map(t=>({...t,task_date:$('date').value,completed:false,created_by:user.id}));if(!rows.length)return alert('No hay pendientes nuevos');const r=await sb.from('tasks').insert(rows);if(r.error)return status(r.error.message,'err');alert(rows.length+' pendiente(s) agregado(s)');loadTasks()};$('refresh').onclick=loadTasks;function shift(n){const d=new Date($('date').value+'T12:00:00');d.setDate(d.getDate()+n);$('date').value=iso(d);loadTasks()}$('prev').onclick=()=>shift(-1);$('next').onclick=()=>shift(1);$('date').onchange=loadTasks;document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');const t=b.dataset.v==='today';$('today').classList.toggle('hidden',!t);$('history').classList.toggle('hidden',t);if(!t)renderHistory()});async function renderHistory(){const d=new Date();d.setDate(d.getDate()-30);const{data,error}=await sb.from('tasks').select('section_id,text,task_date,completed').gte('task_date',iso(d)).order('task_date',{ascending:false});if(error)return $('historyList').innerHTML='<div class="empty">'+esc(error.message)+'</div>';const by={};(data||[]).forEach(t=>(by[t.task_date]??=[]).push(t));$('historyList').innerHTML=Object.keys(by).sort((a,b)=>b.localeCompare(a)).map(date=>{const list=by[date],done=list.filter(t=>t.completed).length,groups=sections.map(s=>{const x=list.filter(t=>String(t.section_id)===String(s.id));return x.length?`<div class="hgroup"><b>${esc(s.name)}</b><ul>${x.map(t=>`<li>${t.completed?'✓':'○'} ${esc(t.text)}</li>`).join('')}</ul></div>`:''}).join('');return `<div class="historyday"><div class="shead"><strong>${new Intl.DateTimeFormat('es-MX',{dateStyle:'full'}).format(new Date(date+'T12:00:00'))}</strong><span>${Math.round(done/list.length*100)}%</span></div>${groups}</div>`}).join('')||'<div class="empty">Sin historial.</div>'}window.addEventListener('focus',()=>user&&loadTasks());setInterval(()=>user&&loadTasks(),30000);$('date').value=iso();sb.auth.getSession().then(({data:{session}})=>{if(!session)show(false)})})();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d1b3e" />
+  <title>Checklist MAF</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <section id="loginView" class="login-shell">
+    <div class="login-card">
+      <div class="brand-mark">✓</div>
+      <h1>Checklist MAF</h1>
+      <p>Inicia sesión para consultar y actualizar los mismos pendientes desde cualquier dispositivo.</p>
+      <form id="loginForm" class="stack">
+        <input id="emailInput" type="email" placeholder="Correo electrónico" autocomplete="email" required />
+        <input id="passwordInput" type="password" placeholder="Contraseña" autocomplete="current-password" required />
+        <button id="loginButton" class="button primary" type="submit">Iniciar sesión</button>
+      </form>
+      <p id="loginMessage" class="message"></p>
+    </div>
+  </section>
+
+  <main id="appView" class="app hidden">
+    <header class="header">
+      <div>
+        <h1>Checklist Diario MAF</h1>
+        <p>Pendientes compartidos, progreso e historial</p>
+      </div>
+      <div class="account">
+        <strong id="userEmail"></strong>
+        <button id="logoutButton" class="button light small" type="button">Cerrar sesión</button>
+      </div>
+      <div class="date-selector">
+        <button id="previousDayButton" class="date-button" type="button">←</button>
+        <input id="selectedDate" type="date" />
+        <button id="nextDayButton" class="date-button" type="button">→</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="today" type="button">HOY</button>
+      <button class="tab" data-tab="history" type="button">HISTORIAL</button>
+    </nav>
+
+    <section id="todayView">
+      <article class="card">
+        <div class="progress-header">
+          <div>
+            <h2>Progreso del día</h2>
+            <p id="progressText">0 de 0 tareas completadas</p>
+          </div>
+          <strong id="progressPercent">0%</strong>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      </article>
+
+      <article class="card">
+        <form id="taskForm" class="task-form">
+          <select id="sectionSelect" required></select>
+          <input id="taskInput" type="text" maxlength="180" placeholder="Escribe un pendiente..." required />
+          <button class="button primary" type="submit">+ Agregar pendiente</button>
+        </form>
+        <form id="sectionForm" class="section-form">
+          <input id="sectionInput" type="text" maxlength="60" placeholder="Crear nueva sección..." />
+          <button class="button light" type="submit">+ Agregar sección</button>
+        </form>
+      </article>
+
+      <section id="sectionsContainer"></section>
+      <div class="bottom-actions">
+        <button id="carryButton" class="button light" type="button">Pasar pendientes de ayer</button>
+        <button id="refreshButton" class="button light" type="button">Actualizar</button>
+      </div>
+      <p id="appMessage" class="message center">Conectando...</p>
+    </section>
+
+    <section id="historyView" class="hidden">
+      <article class="card">
+        <div class="history-heading"><div><h2>Historial diario</h2><p>Últimos 30 días con actividad</p></div></div>
+        <div id="historyContainer"></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
