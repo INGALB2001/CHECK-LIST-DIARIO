@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d1b3e" />
+  <title>MAF HUB | Control de fabricación</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <section id="loginView" class="login-shell hidden">
+    <form id="loginForm" class="login-card">
+      <div class="brand-mark">MAF</div>
+      <h1>MAF HUB</h1>
+      <p>Plataforma interna de proyectos y fabricación.</p>
+      <input id="emailInput" type="email" placeholder="Correo" required autocomplete="email" />
+      <input id="passwordInput" type="password" placeholder="Contraseña" required autocomplete="current-password" />
+      <button class="button primary" type="submit">Iniciar sesión</button>
+      <p id="loginMessage" class="message"></p>
+    </form>
+  </section>
+
+  <main id="appView" class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-block">
+        <div class="brand-icon">M</div>
+        <div><strong>MAF HUB</strong><small>Automation</small></div>
+      </div>
+      <nav class="nav-list">
+        <button class="nav-item" data-view="dashboard">▦ <span>Dashboard</span></button>
+        <button class="nav-item" data-view="checklist">✓ <span>Checklist diario</span></button>
+        <button class="nav-item active" data-view="manufacturing">⚙ <span>Fabricación</span></button>
+        <button class="nav-item disabled">▤ <span>Proyectos</span></button>
+        <button class="nav-item disabled">$ <span>Cotizaciones</span></button>
+        <button class="nav-item disabled">□ <span>Compras</span></button>
+        <button class="nav-item disabled">⌂ <span>Inventario</span></button>
+      </nav>
+      <div class="sidebar-footer">
+        <span id="sessionName">Modo demostración</span>
+        <button id="logoutButton" class="link-button hidden" type="button">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">CONTROL DE PRODUCCIÓN</p>
+          <h1 id="pageTitle">Fabricación</h1>
+        </div>
+        <div class="top-actions">
+          <button id="syncDrawingsButton" class="button light" type="button">↻ Sincronizar planos</button>
+          <button id="newProjectButton" class="button primary" type="button">+ Nuevo proyecto</button>
+        </div>
+      </header>
+
+      <section id="dashboardView" class="view hidden">
+        <div class="empty-state">El dashboard general se conectará con todos los módulos de MAF HUB.</div>
+      </section>
+
+      <section id="checklistView" class="view hidden">
+        <div class="empty-state">El Checklist Diario actual se integrará aquí conservando su base de datos.</div>
+      </section>
+
+      <section id="manufacturingView" class="view">
+        <div class="metrics-grid">
+          <article class="metric-card"><span>Proyectos activos</span><strong id="metricProjects">0</strong></article>
+          <article class="metric-card"><span>Piezas totales</span><strong id="metricParts">0</strong></article>
+          <article class="metric-card"><span>En fabricación</span><strong id="metricInProgress">0</strong></article>
+          <article class="metric-card warning"><span>Bloqueadas</span><strong id="metricBlocked">0</strong></article>
+        </div>
+
+        <div class="toolbar card">
+          <input id="searchInput" type="search" placeholder="Buscar proyecto, número de pieza o descripción…" />
+          <select id="employeeFilter"><option value="">Todos los responsables</option></select>
+          <select id="statusFilter">
+            <option value="">Todos los estados</option>
+            <option value="pending">Pendiente</option>
+            <option value="ready">Lista para fabricar</option>
+            <option value="in_progress">En fabricación</option>
+            <option value="review">En revisión</option>
+            <option value="completed">Terminada</option>
+            <option value="blocked">Bloqueada</option>
+          </select>
+        </div>
+
+        <div class="manufacturing-layout">
+          <section class="card project-panel">
+            <div class="section-heading"><div><p class="eyebrow">PROYECTOS</p><h2>Árbol de fabricación</h2></div></div>
+            <div id="projectTree" class="project-tree"></div>
+          </section>
+
+          <section class="card detail-panel">
+            <div id="detailEmpty" class="empty-state">
+              Selecciona una pieza para consultar plano, proceso, responsable, avance y anotaciones.
+            </div>
+            <div id="partDetail" class="hidden">
+              <div class="detail-header">
+                <div><p id="detailPath" class="eyebrow"></p><h2 id="detailPartTitle"></h2></div>
+                <span id="detailStatus" class="status-pill"></span>
+              </div>
+
+              <div class="detail-grid">
+                <label>Número de pieza<input id="detailPartNumber" readonly /></label>
+                <label>Cantidad<input id="detailQuantity" type="number" min="1" /></label>
+                <label>Material<input id="detailMaterial" /></label>
+                <label>Fecha requerida<input id="detailDueDate" type="date" /></label>
+              </div>
+
+              <div class="drawing-card">
+                <div><p class="eyebrow">PLANO VIGENTE</p><strong id="drawingName">Sin plano ligado</strong><small id="drawingRevision"></small></div>
+                <div class="drawing-actions">
+                  <a id="openDrawingButton" class="button primary disabled-link" target="_blank" rel="noopener">Abrir PDF</a>
+                  <button id="linkDrawingButton" class="button light" type="button">Ligar plano</button>
+                </div>
+              </div>
+
+              <div class="section-heading compact"><div><p class="eyebrow">RUTA DE FABRICACIÓN</p><h3>Procesos y responsables</h3></div><button id="addOperationButton" class="button light small" type="button">+ Proceso</button></div>
+              <div id="operationsList" class="operations-list"></div>
+
+              <div class="section-heading compact"><div><p class="eyebrow">ANOTACIONES</p><h3>Bitácora de la pieza</h3></div></div>
+              <form id="noteForm" class="note-form">
+                <textarea id="noteInput" rows="3" placeholder="Agregar indicación, problema detectado o avance…"></textarea>
+                <button class="button primary" type="submit">Guardar nota</button>
+              </form>
+              <div id="notesList" class="notes-list"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="projectDialog">
+    <form id="projectForm" method="dialog" class="dialog-form">
+      <div class="dialog-heading"><h2>Nuevo proyecto</h2><button value="cancel" class="icon-button" type="submit">×</button></div>
+      <label>Código<input id="projectCode" placeholder="PR-2026-001" required /></label>
+      <label>Nombre<input id="projectName" placeholder="Nail Roller" required /></label>
+      <label>Cliente<input id="projectClient" placeholder="Cliente" /></label>
+      <label>Fecha de entrega<input id="projectDueDate" type="date" /></label>
+      <label>ID carpeta Google Drive<input id="projectDriveFolder" placeholder="Opcional en esta etapa" /></label>
+      <button class="button primary" value="default" type="submit">Crear proyecto</button>
+    </form>
+  </dialog>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
