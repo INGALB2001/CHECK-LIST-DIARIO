@@ -20,3 +20,4 @@ Uso:
 5. El historial y el progreso se guardan automáticamente en el navegador.
 
 Para compartir la misma información entre varios dispositivos se requiere una base de datos en línea.
+Actualización de despliegue
